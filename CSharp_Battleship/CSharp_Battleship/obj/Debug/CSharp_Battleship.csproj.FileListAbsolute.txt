@@ -6,3 +6,11 @@ C:\Users\mzinc\OneDrive\Desktop\CSharp_Battleship\CSharp_Battleship\bin\Debug\CS
 C:\Users\mzinc\OneDrive\Desktop\CSharp_Battleship\CSharp_Battleship\bin\Debug\CSharp_Battleship.pdb
 C:\Users\mzinc\OneDrive\Desktop\CSharp_Battleship\CSharp_Battleship\obj\Debug\CSharp_Battleship.exe
 C:\Users\mzinc\OneDrive\Desktop\CSharp_Battleship\CSharp_Battleship\obj\Debug\CSharp_Battleship.pdb
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\bin\Debug\CSharp_Battleship.exe.config
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\bin\Debug\CSharp_Battleship.exe
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\bin\Debug\CSharp_Battleship.pdb
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\obj\Debug\CSharp_Battleship.csproj.AssemblyReference.cache
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\obj\Debug\CSharp_Battleship.csproj.SuggestedBindingRedirects.cache
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\obj\Debug\CSharp_Battleship.csproj.CoreCompileInputs.cache
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\obj\Debug\CSharp_Battleship.exe
+C:\Users\mzinc\OneDrive\Desktop\Battleship\CSharp_Battleship\CSharp_Battleship\obj\Debug\CSharp_Battleship.pdb
