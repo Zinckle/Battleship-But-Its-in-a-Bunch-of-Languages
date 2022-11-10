@@ -15,18 +15,34 @@ namespace CSharp_Battleship
             public int Y;
         }
 
+        public class Ship
+        {
+            public Point[] points;
+            public string name;
+
+            public int health;
+            public int hits;
+            public Ship(Point[] points, string name)
+            {
+                this.points = points;
+                this.name = name;
+                health = points.Length;
+                hits = 0;
+            }
+        }
+
         public class Player
         {
             public string name;
 
-            public int[,] board = new int[10, 10];
-            public int[,] guessBoard = new int[10, 10];
+            public string[,] board = new string[10, 10];
+            public string[,] guessBoard = new string[10, 10];
 
-            public Point[] carrier = new Point[5];
-            public Point[] battleship = new Point[4];
-            public Point[] destroyer = new Point[3];
-            public Point[] submarine = new Point[3];
-            public Point[] patrolBoat = new Point[2];
+            public Ship carrier = new Ship(new Point[5], "carrier");
+            public Ship battleship = new Ship(new Point[4], "battleship");
+            public Ship destroyer = new Ship(new Point[3], "destroyer");
+            public Ship submarine = new Ship(new Point[3], "submarine");
+            public Ship patrolBoat = new Ship(new Point[2], "patrol boat");
 
             public Player(string name)
             {
@@ -35,27 +51,27 @@ namespace CSharp_Battleship
 
         }
 
-        static public int[,] ClearBoard(int[,] board)
+        static public string[,] ClearBoard(string[,] board)
         {
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    board[i, j] = 0;
+                    board[i, j] = "~";
                 }
             }
             return board;
         }
 
-        static public Point[] GetShip(string ship, int shipSize)
+        static public Point[] fillShip(string ship, int shipSize)
         {
             var ret = new Point[shipSize];
             var done = false;
             while(!done)
             {
-                Console.WriteLine("Enter start point of " + ship + ":");
+                Console.WriteLine("Enter start point of " + ship + "(Length = " + shipSize + "):");
                 string start = Console.ReadLine();
-                Console.WriteLine("Enter end point of " + ship + ":");
+                Console.WriteLine("Enter end point of " + ship + "(Length = " + shipSize + "):");
                 string end = Console.ReadLine();
                 var startArr = start.Split(',');
                 var endArr = end.Split(',');
@@ -137,11 +153,53 @@ namespace CSharp_Battleship
 
         }
 
+        static public string[,] putPointsOnGrid(string[,] grid, Point[] points)
+        {
+            foreach (var point in points)
+            {
+                grid[point.X, point.Y] = "" + points.Length;
+            }
+            return grid;
+        }
+
         static public Player populateShips(Player player)
         {
+            player.board = ClearBoard(player.board);
+            player.guessBoard = ClearBoard(player.guessBoard);
 
+            player.carrier.points = fillShip(player.carrier.name, player.carrier.health);
+            player.board = putPointsOnGrid(player.board, player.carrier.points);
+            printBoard(player.board);
+
+            player.battleship.points = fillShip(player.battleship.name, player.battleship.health);
+            player.board = putPointsOnGrid(player.board, player.battleship.points);
+            printBoard(player.board);
+
+            player.destroyer.points = fillShip(player.destroyer.name, player.destroyer.health);
+            player.board = putPointsOnGrid(player.board, player.destroyer.points);
+            printBoard(player.board);
+
+            player.submarine.points = fillShip(player.submarine.name, player.submarine.health);
+            player.board = putPointsOnGrid(player.board, player.submarine.points);
+            printBoard(player.board);
+
+            player.patrolBoat.points = fillShip(player.patrolBoat.name, player.patrolBoat.health);
+            player.board = putPointsOnGrid(player.board, player.patrolBoat.points);
+            printBoard(player.board);
 
             return player;
+        }
+
+        static public void printBoard(string[,] board)
+        {
+            for (int i = 0; i < Math.Sqrt(board.Length); i++)
+            {
+                for (int j = 0; j < Math.Sqrt(board.Length); j++)
+                {
+                    Console.Write(board[i,j] + " ");
+                }
+                Console.WriteLine();
+            }
         }
 
         static void Main(string[] args)
@@ -150,17 +208,14 @@ namespace CSharp_Battleship
             string p1Name = Console.ReadLine();
             Console.WriteLine("Enter the seccond player's name:");
             string p2Name = Console.ReadLine();
-
+            
             var player1 = new Player(p1Name);
             var player2 = new Player(p2Name);
-            Console.WriteLine(player1.guessBoard[0,1]);
 
-            var test = GetShip("test", 4);
-            foreach (var item in test)
-            {
-                Console.WriteLine(item.X + "," + item.Y);
-            }
-            
+            player1 = populateShips(player1);
+            printBoard(player1.board);
+
+
             Console.WriteLine();
 
         }
