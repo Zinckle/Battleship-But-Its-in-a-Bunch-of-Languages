@@ -13,6 +13,12 @@ namespace CSharp_Battleship
         {
             public int X;
             public int Y;
+
+            public Point(int X, int Y)
+                { this.X = X; this.Y = Y; }
+
+            //create a string to point thing
+
         }
 
         public class Ship
@@ -63,15 +69,15 @@ namespace CSharp_Battleship
             return board;
         }
 
-        static public Point[] fillShip(string ship, int shipSize)
+        static public Point[] fillShip(string ship, int shipSize, string playerName)
         {
             var ret = new Point[shipSize];
             var done = false;
             while(!done)
             {
-                Console.WriteLine("Enter start point of " + ship + "(Length = " + shipSize + "):");
+                Console.WriteLine("Enter start point of "+ playerName + "'s " + ship + "(Length = " + shipSize + "):");
                 string start = Console.ReadLine();
-                Console.WriteLine("Enter end point of " + ship + "(Length = " + shipSize + "):");
+                Console.WriteLine("Enter end point of " + playerName + "'s " + ship + "(Length = " + shipSize + "):");
                 string end = Console.ReadLine();
                 var startArr = start.Split(',');
                 var endArr = end.Split(',');
@@ -111,21 +117,21 @@ namespace CSharp_Battleship
                     continue;
                 }
 
-                Console.WriteLine(Math.Abs(startArr1 - endArr1));
-                Console.WriteLine(Math.Abs(startArr2 - endArr2));
+                //Console.WriteLine(Math.Abs(startArr1 - endArr1));
+                //Console.WriteLine(Math.Abs(startArr2 - endArr2));
                 if (Math.Abs(startArr1 - endArr1) == 0 && Math.Abs(startArr2 - endArr2) == shipSize-1) 
                 {
                     if (startArr2 > endArr2)
                     {
                         for (int i = endArr2; i <= startArr2; i++)
                         {
-                            ret[i - endArr2] = (new Point { X = startArr1, Y = i });
+                            ret[i - endArr2] = (new Point(startArr1, i));
                         }
                         return ret;
                     }
                     for (int i = startArr2; i <= endArr2; i++)
                     {
-                        ret[i - startArr2] = (new Point { X = startArr1, Y = i });
+                        ret[i - startArr2] = (new Point(startArr1, i));
                     }
                     return ret;
 
@@ -136,13 +142,13 @@ namespace CSharp_Battleship
                     {
                         for (int i = endArr1; i <= startArr1; i++)
                         {
-                            ret[i - endArr1] = (new Point { X = i, Y = startArr2 });
+                            ret[i - endArr1] = (new Point(i, startArr2));
                         }
                         return ret;
                     }
                     for (int i = startArr1; i <= endArr1; i++)
                     {
-                        ret[i - startArr1] = (new Point { X = i, Y = startArr2 });
+                        ret[i - startArr1] = (new Point(i, startArr2));
                     }
                     return ret;
                 }
@@ -153,11 +159,11 @@ namespace CSharp_Battleship
 
         }
 
-        static public string[,] putPointsOnGrid(string[,] grid, Point[] points)
+        static public string[,] putPointsOnGrid(string[,] grid, Point[] points, string name)
         {
             foreach (var point in points)
             {
-                grid[point.X, point.Y] = "" + points.Length;
+                grid[point.X, point.Y] = name;
             }
             return grid;
         }
@@ -167,26 +173,26 @@ namespace CSharp_Battleship
             player.board = ClearBoard(player.board);
             player.guessBoard = ClearBoard(player.guessBoard);
 
-            player.carrier.points = fillShip(player.carrier.name, player.carrier.health);
-            player.board = putPointsOnGrid(player.board, player.carrier.points);
+            player.carrier.points = fillShip(player.carrier.name, player.carrier.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.carrier.points, "C");
             printBoard(player.board);
 
-            player.battleship.points = fillShip(player.battleship.name, player.battleship.health);
-            player.board = putPointsOnGrid(player.board, player.battleship.points);
+            player.battleship.points = fillShip(player.battleship.name, player.battleship.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.battleship.points, "B");
             printBoard(player.board);
 
-            player.destroyer.points = fillShip(player.destroyer.name, player.destroyer.health);
-            player.board = putPointsOnGrid(player.board, player.destroyer.points);
+            player.destroyer.points = fillShip(player.destroyer.name, player.destroyer.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.destroyer.points, "D");
             printBoard(player.board);
 
-            player.submarine.points = fillShip(player.submarine.name, player.submarine.health);
-            player.board = putPointsOnGrid(player.board, player.submarine.points);
+            player.submarine.points = fillShip(player.submarine.name, player.submarine.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.submarine.points, "S");
             printBoard(player.board);
 
-            player.patrolBoat.points = fillShip(player.patrolBoat.name, player.patrolBoat.health);
-            player.board = putPointsOnGrid(player.board, player.patrolBoat.points);
+            player.patrolBoat.points = fillShip(player.patrolBoat.name, player.patrolBoat.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.patrolBoat.points, "P");
             printBoard(player.board);
-
+            Console.Clear();
             return player;
         }
 
@@ -202,21 +208,42 @@ namespace CSharp_Battleship
             }
         }
 
+        static public bool takeTurn(Player activePlayer, Player nonActivePlayer)
+        {
+            Console.WriteLine(activePlayer.name + "'s guesses:");
+            printBoard(activePlayer.guessBoard);
+            Console.WriteLine(activePlayer.name + "'s board:");
+            printBoard(activePlayer.board);
+
+            Console.WriteLine(activePlayer.name + ", please enter a guess:");
+            string shot = Console.ReadLine();
+            return true;
+        }
+
+        static public bool checkHit(Player player, Point guess)
+        {
+            //if player.board[guess.X, guess.y] != "~" player
+                    return true;
+        }
+
+        static public bool checkLoss(Player player)
+        {
+            return false;
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Enter the first player's name:");
             string p1Name = Console.ReadLine();
             Console.WriteLine("Enter the seccond player's name:");
             string p2Name = Console.ReadLine();
-            
-            var player1 = new Player(p1Name);
-            var player2 = new Player(p2Name);
 
-            player1 = populateShips(player1);
-            printBoard(player1.board);
+            var player1 = populateShips(new Player(p1Name));
+            var player2 = populateShips(new Player(p2Name));
 
 
-            Console.WriteLine();
+
+            Console.ReadLine();
 
         }
     }
