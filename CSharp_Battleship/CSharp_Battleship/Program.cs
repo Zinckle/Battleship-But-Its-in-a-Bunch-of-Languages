@@ -177,22 +177,22 @@ namespace CSharp_Battleship
             player.board = putPointsOnGrid(player.board, player.carrier.points, "C");
             printBoard(player.board);
 
-            //player.battleship.points = fillShip(player.battleship.name, player.battleship.health, player.name);
-            //player.board = putPointsOnGrid(player.board, player.battleship.points, "B");
-            //printBoard(player.board);
+            player.battleship.points = fillShip(player.battleship.name, player.battleship.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.battleship.points, "B");
+            printBoard(player.board);
 
-            //player.destroyer.points = fillShip(player.destroyer.name, player.destroyer.health, player.name);
-            //player.board = putPointsOnGrid(player.board, player.destroyer.points, "D");
-            //printBoard(player.board);
+            player.destroyer.points = fillShip(player.destroyer.name, player.destroyer.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.destroyer.points, "D");
+            printBoard(player.board);
 
-            //player.submarine.points = fillShip(player.submarine.name, player.submarine.health, player.name);
-            //player.board = putPointsOnGrid(player.board, player.submarine.points, "S");
-            //printBoard(player.board);
+            player.submarine.points = fillShip(player.submarine.name, player.submarine.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.submarine.points, "S");
+            printBoard(player.board);
 
-            //player.patrolBoat.points = fillShip(player.patrolBoat.name, player.patrolBoat.health, player.name);
-            //player.board = putPointsOnGrid(player.board, player.patrolBoat.points, "P");
-            //printBoard(player.board);
-            //Console.Clear();
+            player.patrolBoat.points = fillShip(player.patrolBoat.name, player.patrolBoat.health, player.name);
+            player.board = putPointsOnGrid(player.board, player.patrolBoat.points, "P");
+            printBoard(player.board);
+            Console.Clear();
             return player;
         }
 
