@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+//TODO: add restriction when placing boats so they cant overlap
+//fix strings and make them better
+//clean up code
 namespace CSharp_Battleship
 {
     internal class Program
@@ -27,13 +31,11 @@ namespace CSharp_Battleship
             public string name;
 
             public int health;
-            public int hits;
             public Ship(Point[] points, string name)
             {
                 this.points = points;
                 this.name = name;
                 health = points.Length;
-                hits = 0;
             }
         }
 
@@ -49,6 +51,8 @@ namespace CSharp_Battleship
             public Ship destroyer = new Ship(new Point[3], "destroyer");
             public Ship submarine = new Ship(new Point[3], "submarine");
             public Ship patrolBoat = new Ship(new Point[2], "patrol boat");
+
+            public int shipsLeft = 5;
 
             public Player(string name)
             {
@@ -93,18 +97,14 @@ namespace CSharp_Battleship
                 try
                 {
                     int.TryParse(startArr[0], out startArr1);
-                    Console.WriteLine(startArr1);
                     int.TryParse(startArr[1], out startArr2);
-                    Console.WriteLine(startArr2);
                     if (startArr1 < 0 || startArr1 > 9 || startArr2 < 0 || startArr2 > 9)
                     {
                         Console.WriteLine("Sorry that ship was invalid, please try again");
                         continue;
                     }
                     int.TryParse(endArr[0], out endArr1);
-                    Console.WriteLine(endArr1);
                     int.TryParse(endArr[1], out endArr2);
-                    Console.WriteLine(endArr2);
                     if (endArr1 < 0 || endArr1 > 9 || endArr2 < 0 || endArr2 > 9)
                     {
                         Console.WriteLine("Sorry that ship was invalid, please try again");
@@ -177,22 +177,22 @@ namespace CSharp_Battleship
             player.board = putPointsOnGrid(player.board, player.carrier.points, "C");
             printBoard(player.board);
 
-            player.battleship.points = fillShip(player.battleship.name, player.battleship.health, player.name);
-            player.board = putPointsOnGrid(player.board, player.battleship.points, "B");
-            printBoard(player.board);
+            //player.battleship.points = fillShip(player.battleship.name, player.battleship.health, player.name);
+            //player.board = putPointsOnGrid(player.board, player.battleship.points, "B");
+            //printBoard(player.board);
 
-            player.destroyer.points = fillShip(player.destroyer.name, player.destroyer.health, player.name);
-            player.board = putPointsOnGrid(player.board, player.destroyer.points, "D");
-            printBoard(player.board);
+            //player.destroyer.points = fillShip(player.destroyer.name, player.destroyer.health, player.name);
+            //player.board = putPointsOnGrid(player.board, player.destroyer.points, "D");
+            //printBoard(player.board);
 
-            player.submarine.points = fillShip(player.submarine.name, player.submarine.health, player.name);
-            player.board = putPointsOnGrid(player.board, player.submarine.points, "S");
-            printBoard(player.board);
+            //player.submarine.points = fillShip(player.submarine.name, player.submarine.health, player.name);
+            //player.board = putPointsOnGrid(player.board, player.submarine.points, "S");
+            //printBoard(player.board);
 
-            player.patrolBoat.points = fillShip(player.patrolBoat.name, player.patrolBoat.health, player.name);
-            player.board = putPointsOnGrid(player.board, player.patrolBoat.points, "P");
-            printBoard(player.board);
-            Console.Clear();
+            //player.patrolBoat.points = fillShip(player.patrolBoat.name, player.patrolBoat.health, player.name);
+            //player.board = putPointsOnGrid(player.board, player.patrolBoat.points, "P");
+            //printBoard(player.board);
+            //Console.Clear();
             return player;
         }
 
@@ -215,20 +215,103 @@ namespace CSharp_Battleship
             Console.WriteLine(activePlayer.name + "'s board:");
             printBoard(activePlayer.board);
 
-            Console.WriteLine(activePlayer.name + ", please enter a guess:");
-            string shot = Console.ReadLine();
-            return true;
+            var done = false;
+            int shotPoint1 = 0;
+            int shotPoint2 = 0;
+            while (!done)
+            {
+                Console.WriteLine(activePlayer.name + ", please enter a guess:");
+                var shot = Console.ReadLine();
+                var shotArr = shot.Split(',');
+                if (shotArr.Length != 2 || shot.Length != 3)
+                {
+                    Console.WriteLine("Sorry that shot was invalid, please try again");
+                    continue;
+                }
+
+                try
+                {
+                    int.TryParse(shotArr[0], out shotPoint1);
+                    int.TryParse(shotArr[1], out shotPoint2);
+                    if (shotPoint1 < 0 || shotPoint1 > 9 || shotPoint2 < 0 || shotPoint2 > 9)
+                    {
+                        Console.WriteLine("Sorry that shot was invalid, please try again");
+                        continue;
+                    }
+                    done = true;
+                    
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Sorry that shot was invalid, please try again");
+                    continue;
+                }
+            }
+
+            var shotPoint = new Point(shotPoint1, shotPoint2);
+            var shotHit = checkHit(nonActivePlayer, shotPoint);
+            if(shotHit)
+            {
+                activePlayer.guessBoard[shotPoint.X, shotPoint.Y] = "H";
+                nonActivePlayer.board[shotPoint.X, shotPoint.Y] = "X";
+            }
+            else
+            {
+                activePlayer.guessBoard[shotPoint.X, shotPoint.Y] = "M";
+            }
+            return shotHit;
         }
 
         static public bool checkHit(Player player, Point guess)
         {
-            //if player.board[guess.X, guess.y] != "~" player
-                    return true;
-        }
+            var shot = player.board[guess.X, guess.Y];
+            while (true)
+            {
+                switch (shot)
+                {
+                    case "~":
+                        return false;
+                    case "C":
+                        player.carrier.health -= 1;
+                        if (player.carrier.health == 0)
+                        {
+                            player.shipsLeft -= 1;
+                        }
+                        return true;
+                    case "B":
+                        player.battleship.health -= 1;
+                        if (player.battleship.health == 0)
+                        {
+                            player.shipsLeft -= 1;
+                        }
+                        return true;
+                    case "D":
+                        player.destroyer.health -= 1;
+                        if (player.destroyer.health == 0)
+                        {
+                            player.shipsLeft -= 1;
+                        }
+                        return true;
+                    case "S":
+                        player.submarine.health -= 1;
+                        if (player.submarine.health == 0)
+                        {
+                            player.shipsLeft -= 1;
+                        }
+                        return true;
+                    case "P":
+                        player.patrolBoat.health -= 1;
+                        if(player.patrolBoat.health == 0)
+                        {
+                            player.shipsLeft -= 1;
+                        }
+                        return true;
 
-        static public bool checkLoss(Player player)
-        {
-            return false;
+                    default:
+                        Console.WriteLine("Invalid shot please try again");
+                        break;
+                }
+            }
         }
 
         static void Main(string[] args)
@@ -241,7 +324,32 @@ namespace CSharp_Battleship
             var player1 = populateShips(new Player(p1Name));
             var player2 = populateShips(new Player(p2Name));
 
-
+            var activePlayer = player1;
+            var nonActivePlayer = player2;
+            Player holder;
+            while (player1.shipsLeft != 0 && player2.shipsLeft != 0)
+            {
+                var same = takeTurn(activePlayer, nonActivePlayer);
+                if (!same)
+                {
+                    Console.Clear();
+                    printBoard(activePlayer.guessBoard);
+                    Console.WriteLine("Sorry that guess was wrong please give control to" + nonActivePlayer.name + "then press any key");
+                    Console.ReadLine();
+                    Console.Clear();
+                    holder = activePlayer;
+                    activePlayer = nonActivePlayer;
+                    nonActivePlayer = holder;
+                }
+            }
+            if (player1.shipsLeft == 0)
+            {
+                Console.WriteLine("Congrats" + player2.name + ", you won!");
+            }
+            else
+            {
+                Console.WriteLine("Congrats" + player1.name + ", you won!");
+            }
 
             Console.ReadLine();
 
